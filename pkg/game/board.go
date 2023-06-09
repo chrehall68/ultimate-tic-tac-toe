@@ -11,14 +11,16 @@ type abstractSpace interface {
 type abstractCell interface {
 	cells() [3][3]abstractSpace
 	owner() uint8
+	full() bool
 }
 
 // ========== struct and interface definitions ==========
 
 // internal coordinate representation
 type coord struct {
-	row uint8
-	col uint8
+	row   uint8
+	col   uint8
+	valid bool
 }
 
 // a certain space
@@ -37,7 +39,7 @@ type board struct {
 	curCell coord
 }
 
-// ========== owner method for boards and cells ==========
+// ========== methods for boards and cells ==========
 func getOwner(ac abstractCell) uint8 {
 	// check if any of the rows are claimed
 	for row := 0; row < 3; row++ {
@@ -94,13 +96,37 @@ func getOwner(ac abstractCell) uint8 {
 	// no one is the owner
 	return 0
 }
+func full(ac abstractCell) bool {
+	for row := 0; row < 3; row++ {
+		for col := 0; col < 3; col++ {
+			if ac.cells()[row][col].owner() == 0 {
+				return false
+			}
+		}
+	}
+	return true
+}
 
 // ========== space methods ==========
+func newSpace() space {
+	s := space{val: 0}
+	return s
+}
 func (s *space) owner() uint8 {
 	return s.val
 }
 
 // ========== cell methods ==========
+func newCell() cell {
+	// initialize cell spaces
+	var spaces [3][3]space
+	for row := 0; row < 3; row++ {
+		for col := 0; col < 3; col++ {
+			spaces[row][col] = newSpace()
+		}
+	}
+	return cell{spaces}
+}
 func (c *cell) cells() [3][3]abstractSpace {
 	var abstractSpaces [3][3]abstractSpace
 	for row := 0; row < 3; row++ {
@@ -113,8 +139,24 @@ func (c *cell) cells() [3][3]abstractSpace {
 func (c *cell) owner() uint8 {
 	return getOwner(c)
 }
+func (ce *cell) get(c coord) *space {
+	return &ce.spaces[c.row][c.col]
+}
+func (c *cell) full() bool {
+	return full(c)
+}
 
 // ========== board methods ==========
+func newBoard() board {
+	// initialize board spaces
+	var spaces [3][3]cell
+	for row := 0; row < 3; row++ {
+		for col := 0; col < 3; col++ {
+			spaces[row][col] = newCell()
+		}
+	}
+	return board{curCell: coord{row: 1, col: 1, valid: true}, spaces: spaces}
+}
 func (b *board) cells() [3][3]abstractSpace {
 	var abstractSpaces [3][3]abstractSpace
 	for row := 0; row < 3; row++ {
@@ -127,6 +169,12 @@ func (b *board) cells() [3][3]abstractSpace {
 func (b *board) owner() uint8 {
 	return getOwner(b)
 }
+func (b *board) get(c coord) *cell {
+	return &b.spaces[c.row][c.col]
+}
+func (b *board) full() bool {
+	return full(b)
+}
 func (b *board) String() string {
 	dims := 3
 	ret := ""
@@ -137,11 +185,12 @@ func (b *board) String() string {
 					ret += color.Red
 				}
 				for innerCol := 0; innerCol < dims; innerCol++ {
-					if b.spaces[row][col].spaces[innerRow][innerCol].owner() == 1 {
+					switch b.spaces[row][col].spaces[innerRow][innerCol].owner() {
+					case 1:
 						ret += "X "
-					} else if b.spaces[row][col].spaces[innerRow][innerCol].owner() == 2 {
+					case 2:
 						ret += "O "
-					} else {
+					default:
 						ret += "_ "
 					}
 				}
@@ -155,39 +204,4 @@ func (b *board) String() string {
 
 	ret += "\n"
 	return ret
-}
-
-// ========== New Methods ==========
-
-func newSpace() space {
-	s := space{val: 0}
-	return s
-}
-
-func newCell() cell {
-	// initialize cell spaces
-	var spaces [3][3]space
-	for row := 0; row < 3; row++ {
-		for col := 0; col < 3; col++ {
-			spaces[row][col] = newSpace()
-		}
-	}
-
-	c := cell{spaces}
-	return c
-}
-
-func newBoard() board {
-	// initialize board spaces
-	var spaces [3][3]cell
-	for row := 0; row < 3; row++ {
-		for col := 0; col < 3; col++ {
-			spaces[row][col] = newCell()
-		}
-	}
-	// board starting cell
-	startCell := coord{row: 1, col: 1}
-
-	b := board{curCell: startCell, spaces: spaces}
-	return b
 }
