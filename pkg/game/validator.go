@@ -1,11 +1,13 @@
 package game
 
+import "uttt/pkg/board"
+
 // whether or not a move is valid
-func validateMove(b *board, large, small coord) bool {
+func validateMove(b *board.Board, large, small *board.Coord) bool {
 	if !validateCell(b, large) {
 		return false
 	}
-	if b.get(large).get(small).owner() != 0 {
+	if b.Get(large).(*board.Cell).Get(small).Owner() != 0 {
 		return false
 	}
 	return true
@@ -13,8 +15,8 @@ func validateMove(b *board, large, small coord) bool {
 
 // whether or not a destination is fit for being the next
 // curCell
-func validateCell(b *board, c coord) bool {
-	if b.get(c).owner() != 0 || b.get(c).full() {
+func validateCell(b *board.Board, c *board.Coord) bool {
+	if b.Get(c).Owner() != board.Owner_NONE || b.Get(c).(*board.Cell).Full() {
 		return false
 	}
 	return true

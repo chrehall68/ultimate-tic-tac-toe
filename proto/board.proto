@@ -1,0 +1,33 @@
+syntax = "proto3";
+package uttt;
+
+option go_package = "pkg/board";
+
+// a single board coordinate;
+// negative values = invalid
+message Coord {
+  int32 row = 1;
+  int32 col = 2;
+}
+
+// Who the owner of cell/space is
+// 0 = None, 1 = Player 1, 2 = Player 2
+enum Owner {
+  NONE = 0;
+  PLAYER1 = 1;
+  PLAYER2 = 2;
+}
+
+// a space in a cell.
+message Space { Owner val = 1; }
+
+// a cell is a section of the gameboard, containing spaces
+message Cell { repeated Space spaces = 1; }
+
+// a Board is the entire gameboard, containing cells
+message Board {
+  repeated Cell cells = 1;
+  Coord curCell = 2;
+  int32 rows = 3;
+  int32 cols = 4;
+}

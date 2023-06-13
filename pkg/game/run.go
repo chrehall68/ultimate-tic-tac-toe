@@ -3,18 +3,19 @@ package game
 import (
 	"fmt"
 	"strconv"
+	"uttt/pkg/board"
 )
 
 type Runner struct {
 	turn      bool
-	gameboard board
+	gameboard *board.Board
 }
 
 func NewRunner() *Runner {
-	return &Runner{turn: true, gameboard: newBoard()}
+	return &Runner{turn: true, gameboard: board.NewProtoBoard()}
 }
 
-func getCoord(where string) (c coord, quit bool) {
+func getCoord(where string) (c board.Coord, quit bool) {
 	fmt.Println("Where r u going (0 - 8)", where)
 	var inp string
 	fmt.Scanln(&inp)
@@ -22,31 +23,31 @@ func getCoord(where string) (c coord, quit bool) {
 	// process input
 	quit = inp == "q"
 	num, _ := strconv.ParseInt(inp, 10, 8)
-	c = coord{row: uint8(num) / 3, col: uint8(num) % 3}
-	return c, quit
+	c = *board.ToCoord(uint32(num))
+	return
 }
 
 func (runner *Runner) Run() {
 	fmt.Println("playing Ultimate Tic-Tac-Toe")
-	for runner.gameboard.owner() == 0 {
+	for runner.gameboard.Owner() == board.Owner_NONE {
 		// get the turn number
-		var playerNum uint8
+		var playerNum board.Owner
 		if runner.turn {
-			playerNum = 1
+			playerNum = board.Owner_PLAYER1
 		} else {
-			playerNum = 2
+			playerNum = board.Owner_PLAYER2
 		}
 
 		// print messages
-		fmt.Printf("Player %v's turn:\n", playerNum)
-		fmt.Println(runner.gameboard.String())
+		fmt.Printf("%v's turn:\n", playerNum)
+		fmt.Println(runner.gameboard.TerminalString())
 
-		if !runner.gameboard.curCell.valid {
+		if !runner.gameboard.CurCell.Valid() {
 			c, q := getCoord("in large cells")
 			if q {
 				break
 			}
-			runner.gameboard.curCell.row, runner.gameboard.curCell.col = c.row, c.col
+			runner.gameboard.CurCell.Row, runner.gameboard.CurCell.Col = c.Row, c.Col
 		}
 
 		// take input
@@ -56,16 +57,14 @@ func (runner *Runner) Run() {
 		}
 
 		// validate move
-		if validateMove(&runner.gameboard, runner.gameboard.curCell, innerCoord) {
-			runner.gameboard.get(runner.gameboard.curCell).get(innerCoord).val = playerNum
+		if validateMove(runner.gameboard, runner.gameboard.CurCell, &innerCoord) {
+			runner.gameboard.Get(runner.gameboard.CurCell).(*board.Cell).Get(&innerCoord).(*board.Space).Val = playerNum
 
 			// go to the next space
-			if validateCell(&runner.gameboard, innerCoord) {
-				runner.gameboard.curCell.row, runner.gameboard.curCell.col = innerCoord.row, innerCoord.col
-				runner.gameboard.curCell.valid = true
+			if validateCell(runner.gameboard, &innerCoord) {
+				runner.gameboard.CurCell.Row, runner.gameboard.CurCell.Col = innerCoord.Row, innerCoord.Col
 			} else {
-				runner.gameboard.curCell.row, runner.gameboard.curCell.col = 255, 255
-				runner.gameboard.curCell.valid = false
+				runner.gameboard.CurCell.Row, runner.gameboard.CurCell.Col = -1, -1
 			}
 
 			// change turn
@@ -74,5 +73,5 @@ func (runner *Runner) Run() {
 			fmt.Println("invalid move")
 		}
 	}
-	fmt.Println(runner.gameboard.String())
+	fmt.Println(runner.gameboard.TerminalString())
 }
