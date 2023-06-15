@@ -79,7 +79,7 @@ func write(m protoreflect.ProtoMessage, filename string) {
 	}
 
 	// write the bytes
-	if err := os.WriteFile(filename, bytes, os.ModeExclusive); err != nil {
+	if err := os.WriteFile(filename, bytes, os.ModeType); err != nil {
 		log.Fatalln("failed to write bytes")
 	}
 	fmt.Printf("sent message to %v\n", filename)
