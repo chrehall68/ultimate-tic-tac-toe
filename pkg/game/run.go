@@ -79,7 +79,7 @@ func write(m protoreflect.ProtoMessage, filename string) {
 	}
 
 	// write the bytes
-	if err := os.WriteFile(filename, bytes, os.ModeType); err != nil {
+	if err := os.WriteFile(filename, bytes, 0644); err != nil {
 		log.Fatalln("failed to write bytes")
 	}
 	fmt.Printf("sent message to %v\n", filename)
@@ -110,6 +110,7 @@ func (a *AIPlayer) getMove() (*board.Move, bool) {
 	if err != nil {
 		log.Fatalln("failed to decode action")
 	}
+	os.Truncate(board.ACTION_FILE, 0)
 
 	return message.Move, true
 }
