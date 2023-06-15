@@ -6,5 +6,5 @@ import (
 
 func main() {
 	runner := game.NewRunner()
-	runner.RunTerminal()
+	runner.RunPVAI()
 }

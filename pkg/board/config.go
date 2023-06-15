@@ -9,5 +9,7 @@ const (
 
 // protobuf related constants
 const (
-	FILE = "data.b"
+	STATE_FILE  = "statemessage.b"
+	ACTION_FILE = "action.b"
+	RETURN_FILE = "returnmessage.b"
 )
