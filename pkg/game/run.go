@@ -15,7 +15,11 @@ func NewRunner() *Runner {
 	return &Runner{turn: true, gameboard: board.NewProtoBoard()}
 }
 
-func getCoord(where string) (c board.Coord, quit bool) {
+// =======================================================
+// =========== Terminal Helpers ===========
+// =======================================================
+
+func getCoord(where string) (c *board.Coord, quit bool) {
 	fmt.Println("Where r u going (0 - 8)", where)
 	var inp string
 	fmt.Scanln(&inp)
@@ -23,12 +27,32 @@ func getCoord(where string) (c board.Coord, quit bool) {
 	// process input
 	quit = inp == "q"
 	num, _ := strconv.ParseInt(inp, 10, 8)
-	c = *board.ToCoord(uint32(num))
+	c = board.ToCoord(uint32(num))
 	return
 }
 
-func (runner *Runner) Run() {
+func (runner *Runner) getMoveTerminal() (move *board.Move, quit bool) {
+	move = &board.Move{}
+	if !runner.gameboard.CurCell.Valid() {
+		move.Large, quit = getCoord("in large cells")
+		if quit {
+			return
+		}
+	} else {
+		move.Large = &board.Coord{Row: runner.gameboard.CurCell.Row, Col: runner.gameboard.CurCell.Col}
+	}
+
+	move.Small, quit = getCoord("in small cells")
+	return
+}
+
+type moveFunc func() (*board.Move, bool)
+type printStateFunc func(*board.Board, *board.Owner)
+type returnStateFunc func(bool)
+
+func (runner *Runner) run(m moveFunc, p printStateFunc, r returnStateFunc) {
 	fmt.Println("playing Ultimate Tic-Tac-Toe")
+
 	for runner.gameboard.Owner() == board.Owner_NONE {
 		// get the turn number
 		var playerNum board.Owner
@@ -38,40 +62,52 @@ func (runner *Runner) Run() {
 			playerNum = board.Owner_PLAYER2
 		}
 
-		// print messages
-		fmt.Printf("%v's turn:\n", playerNum)
-		fmt.Println(runner.gameboard.TerminalString())
+		p(runner.gameboard, &playerNum)
 
-		if !runner.gameboard.CurCell.Valid() {
-			c, q := getCoord("in large cells")
-			if q {
-				break
-			}
-			runner.gameboard.CurCell.Row, runner.gameboard.CurCell.Col = c.Row, c.Col
-		}
-
-		// take input
-		innerCoord, q := getCoord("in small cells")
-		if q {
+		move, quit := m()
+		if quit {
 			break
 		}
 
 		// validate move
-		if validateMove(runner.gameboard, runner.gameboard.CurCell, &innerCoord) {
-			runner.gameboard.Get(runner.gameboard.CurCell).(*board.Cell).Get(&innerCoord).(*board.Space).Val = playerNum
+		if validateMove(runner.gameboard, move) {
+			runner.gameboard.Get(move.Large).(*board.Cell).Get(move.Small).(*board.Space).Val = playerNum
 
 			// go to the next space
-			if validateCell(runner.gameboard, &innerCoord) {
-				runner.gameboard.CurCell.Row, runner.gameboard.CurCell.Col = innerCoord.Row, innerCoord.Col
+			if validateCell(runner.gameboard, move.Small) {
+				runner.gameboard.CurCell.Row, runner.gameboard.CurCell.Col = move.Small.Row, move.Small.Col
 			} else {
-				runner.gameboard.CurCell.Row, runner.gameboard.CurCell.Col = -1, -1
+				runner.gameboard.CurCell.Invalidate()
 			}
 
 			// change turn
 			runner.turn = !runner.turn
+			r(true)
 		} else {
-			fmt.Println("invalid move")
+			r(false)
 		}
 	}
+
 	fmt.Println(runner.gameboard.TerminalString())
+	fmt.Printf("%v won\n", runner.gameboard.Owner())
+}
+
+func (runner *Runner) RunTerminal() {
+	m := func() (*board.Move, bool) { return runner.getMoveTerminal() }
+
+	p := func(_ *board.Board, player *board.Owner) {
+		// print messages
+		fmt.Printf("%v's turn:\n", *player)
+		fmt.Println(runner.gameboard.TerminalString())
+	}
+
+	b := func(prevValid bool) {
+		if !prevValid {
+			fmt.Println("invalid move!!!")
+		} else {
+			fmt.Println("valid move")
+		}
+	}
+
+	runner.run(m, p, b)
 }

@@ -128,6 +128,62 @@ func (x *Coord) GetCol() int32 {
 	return 0
 }
 
+// a move has a large (outer) coordinate and a small (inner) coordinate
+type Move struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Large *Coord `protobuf:"bytes,1,opt,name=large,proto3" json:"large,omitempty"`
+	Small *Coord `protobuf:"bytes,2,opt,name=small,proto3" json:"small,omitempty"`
+}
+
+func (x *Move) Reset() {
+	*x = Move{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_board_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Move) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Move) ProtoMessage() {}
+
+func (x *Move) ProtoReflect() protoreflect.Message {
+	mi := &file_board_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Move.ProtoReflect.Descriptor instead.
+func (*Move) Descriptor() ([]byte, []int) {
+	return file_board_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Move) GetLarge() *Coord {
+	if x != nil {
+		return x.Large
+	}
+	return nil
+}
+
+func (x *Move) GetSmall() *Coord {
+	if x != nil {
+		return x.Small
+	}
+	return nil
+}
+
 // a space in a cell.
 type Space struct {
 	state         protoimpl.MessageState
@@ -140,7 +196,7 @@ type Space struct {
 func (x *Space) Reset() {
 	*x = Space{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_board_proto_msgTypes[1]
+		mi := &file_board_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -153,7 +209,7 @@ func (x *Space) String() string {
 func (*Space) ProtoMessage() {}
 
 func (x *Space) ProtoReflect() protoreflect.Message {
-	mi := &file_board_proto_msgTypes[1]
+	mi := &file_board_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -166,7 +222,7 @@ func (x *Space) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Space.ProtoReflect.Descriptor instead.
 func (*Space) Descriptor() ([]byte, []int) {
-	return file_board_proto_rawDescGZIP(), []int{1}
+	return file_board_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *Space) GetVal() Owner {
@@ -188,7 +244,7 @@ type Cell struct {
 func (x *Cell) Reset() {
 	*x = Cell{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_board_proto_msgTypes[2]
+		mi := &file_board_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -201,7 +257,7 @@ func (x *Cell) String() string {
 func (*Cell) ProtoMessage() {}
 
 func (x *Cell) ProtoReflect() protoreflect.Message {
-	mi := &file_board_proto_msgTypes[2]
+	mi := &file_board_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -214,7 +270,7 @@ func (x *Cell) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Cell.ProtoReflect.Descriptor instead.
 func (*Cell) Descriptor() ([]byte, []int) {
-	return file_board_proto_rawDescGZIP(), []int{2}
+	return file_board_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *Cell) GetSpaces() []*Space {
@@ -239,7 +295,7 @@ type Board struct {
 func (x *Board) Reset() {
 	*x = Board{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_board_proto_msgTypes[3]
+		mi := &file_board_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -252,7 +308,7 @@ func (x *Board) String() string {
 func (*Board) ProtoMessage() {}
 
 func (x *Board) ProtoReflect() protoreflect.Message {
-	mi := &file_board_proto_msgTypes[3]
+	mi := &file_board_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -265,7 +321,7 @@ func (x *Board) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Board.ProtoReflect.Descriptor instead.
 func (*Board) Descriptor() ([]byte, []int) {
-	return file_board_proto_rawDescGZIP(), []int{3}
+	return file_board_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *Board) GetCells() []*Cell {
@@ -296,6 +352,170 @@ func (x *Board) GetCols() int32 {
 	return 0
 }
 
+// contains info about the current state of the game
+// specificially; it contains the board and the current turn
+type StateMessage struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Board *Board `protobuf:"bytes,1,opt,name=board,proto3" json:"board,omitempty"`
+	Turn  Owner  `protobuf:"varint,2,opt,name=turn,proto3,enum=uttt.Owner" json:"turn,omitempty"`
+}
+
+func (x *StateMessage) Reset() {
+	*x = StateMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_board_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *StateMessage) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StateMessage) ProtoMessage() {}
+
+func (x *StateMessage) ProtoReflect() protoreflect.Message {
+	mi := &file_board_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StateMessage.ProtoReflect.Descriptor instead.
+func (*StateMessage) Descriptor() ([]byte, []int) {
+	return file_board_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *StateMessage) GetBoard() *Board {
+	if x != nil {
+		return x.Board
+	}
+	return nil
+}
+
+func (x *StateMessage) GetTurn() Owner {
+	if x != nil {
+		return x.Turn
+	}
+	return Owner_NONE
+}
+
+// contains info about the action that will be taken
+// Specifically, it contains a move
+type ActionMessage struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Move *Move `protobuf:"bytes,1,opt,name=move,proto3" json:"move,omitempty"`
+}
+
+func (x *ActionMessage) Reset() {
+	*x = ActionMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_board_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ActionMessage) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ActionMessage) ProtoMessage() {}
+
+func (x *ActionMessage) ProtoReflect() protoreflect.Message {
+	mi := &file_board_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ActionMessage.ProtoReflect.Descriptor instead.
+func (*ActionMessage) Descriptor() ([]byte, []int) {
+	return file_board_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *ActionMessage) GetMove() *Move {
+	if x != nil {
+		return x.Move
+	}
+	return nil
+}
+
+// this should be sent after an action is taken
+// it returns the changed board as well as whether
+// or not the move was valid
+type ReturnMessage struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Board *Board `protobuf:"bytes,1,opt,name=board,proto3" json:"board,omitempty"`
+	Valid bool   `protobuf:"varint,2,opt,name=valid,proto3" json:"valid,omitempty"`
+}
+
+func (x *ReturnMessage) Reset() {
+	*x = ReturnMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_board_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ReturnMessage) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ReturnMessage) ProtoMessage() {}
+
+func (x *ReturnMessage) ProtoReflect() protoreflect.Message {
+	mi := &file_board_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ReturnMessage.ProtoReflect.Descriptor instead.
+func (*ReturnMessage) Descriptor() ([]byte, []int) {
+	return file_board_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *ReturnMessage) GetBoard() *Board {
+	if x != nil {
+		return x.Board
+	}
+	return nil
+}
+
+func (x *ReturnMessage) GetValid() bool {
+	if x != nil {
+		return x.Valid
+	}
+	return false
+}
+
 var File_board_proto protoreflect.FileDescriptor
 
 var file_board_proto_rawDesc = []byte{
@@ -303,24 +523,41 @@ var file_board_proto_rawDesc = []byte{
 	0x74, 0x74, 0x74, 0x22, 0x2b, 0x0a, 0x05, 0x43, 0x6f, 0x6f, 0x72, 0x64, 0x12, 0x10, 0x0a, 0x03,
 	0x72, 0x6f, 0x77, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x03, 0x72, 0x6f, 0x77, 0x12, 0x10,
 	0x0a, 0x03, 0x63, 0x6f, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x03, 0x63, 0x6f, 0x6c,
-	0x22, 0x26, 0x0a, 0x05, 0x53, 0x70, 0x61, 0x63, 0x65, 0x12, 0x1d, 0x0a, 0x03, 0x76, 0x61, 0x6c,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x0b, 0x2e, 0x75, 0x74, 0x74, 0x74, 0x2e, 0x4f, 0x77,
-	0x6e, 0x65, 0x72, 0x52, 0x03, 0x76, 0x61, 0x6c, 0x22, 0x2b, 0x0a, 0x04, 0x43, 0x65, 0x6c, 0x6c,
-	0x12, 0x23, 0x0a, 0x06, 0x73, 0x70, 0x61, 0x63, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b,
-	0x32, 0x0b, 0x2e, 0x75, 0x74, 0x74, 0x74, 0x2e, 0x53, 0x70, 0x61, 0x63, 0x65, 0x52, 0x06, 0x73,
-	0x70, 0x61, 0x63, 0x65, 0x73, 0x22, 0x78, 0x0a, 0x05, 0x42, 0x6f, 0x61, 0x72, 0x64, 0x12, 0x20,
-	0x0a, 0x05, 0x63, 0x65, 0x6c, 0x6c, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0a, 0x2e,
-	0x75, 0x74, 0x74, 0x74, 0x2e, 0x43, 0x65, 0x6c, 0x6c, 0x52, 0x05, 0x63, 0x65, 0x6c, 0x6c, 0x73,
-	0x12, 0x25, 0x0a, 0x07, 0x63, 0x75, 0x72, 0x43, 0x65, 0x6c, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28,
-	0x0b, 0x32, 0x0b, 0x2e, 0x75, 0x74, 0x74, 0x74, 0x2e, 0x43, 0x6f, 0x6f, 0x72, 0x64, 0x52, 0x07,
-	0x63, 0x75, 0x72, 0x43, 0x65, 0x6c, 0x6c, 0x12, 0x12, 0x0a, 0x04, 0x72, 0x6f, 0x77, 0x73, 0x18,
-	0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x72, 0x6f, 0x77, 0x73, 0x12, 0x12, 0x0a, 0x04, 0x63,
-	0x6f, 0x6c, 0x73, 0x18, 0x04, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x63, 0x6f, 0x6c, 0x73, 0x2a,
-	0x2b, 0x0a, 0x05, 0x4f, 0x77, 0x6e, 0x65, 0x72, 0x12, 0x08, 0x0a, 0x04, 0x4e, 0x4f, 0x4e, 0x45,
-	0x10, 0x00, 0x12, 0x0b, 0x0a, 0x07, 0x50, 0x4c, 0x41, 0x59, 0x45, 0x52, 0x31, 0x10, 0x01, 0x12,
-	0x0b, 0x0a, 0x07, 0x50, 0x4c, 0x41, 0x59, 0x45, 0x52, 0x32, 0x10, 0x02, 0x42, 0x0b, 0x5a, 0x09,
-	0x70, 0x6b, 0x67, 0x2f, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x33,
+	0x22, 0x4c, 0x0a, 0x04, 0x4d, 0x6f, 0x76, 0x65, 0x12, 0x21, 0x0a, 0x05, 0x6c, 0x61, 0x72, 0x67,
+	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x75, 0x74, 0x74, 0x74, 0x2e, 0x43,
+	0x6f, 0x6f, 0x72, 0x64, 0x52, 0x05, 0x6c, 0x61, 0x72, 0x67, 0x65, 0x12, 0x21, 0x0a, 0x05, 0x73,
+	0x6d, 0x61, 0x6c, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x75, 0x74, 0x74,
+	0x74, 0x2e, 0x43, 0x6f, 0x6f, 0x72, 0x64, 0x52, 0x05, 0x73, 0x6d, 0x61, 0x6c, 0x6c, 0x22, 0x26,
+	0x0a, 0x05, 0x53, 0x70, 0x61, 0x63, 0x65, 0x12, 0x1d, 0x0a, 0x03, 0x76, 0x61, 0x6c, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x0e, 0x32, 0x0b, 0x2e, 0x75, 0x74, 0x74, 0x74, 0x2e, 0x4f, 0x77, 0x6e, 0x65,
+	0x72, 0x52, 0x03, 0x76, 0x61, 0x6c, 0x22, 0x2b, 0x0a, 0x04, 0x43, 0x65, 0x6c, 0x6c, 0x12, 0x23,
+	0x0a, 0x06, 0x73, 0x70, 0x61, 0x63, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0b,
+	0x2e, 0x75, 0x74, 0x74, 0x74, 0x2e, 0x53, 0x70, 0x61, 0x63, 0x65, 0x52, 0x06, 0x73, 0x70, 0x61,
+	0x63, 0x65, 0x73, 0x22, 0x78, 0x0a, 0x05, 0x42, 0x6f, 0x61, 0x72, 0x64, 0x12, 0x20, 0x0a, 0x05,
+	0x63, 0x65, 0x6c, 0x6c, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0a, 0x2e, 0x75, 0x74,
+	0x74, 0x74, 0x2e, 0x43, 0x65, 0x6c, 0x6c, 0x52, 0x05, 0x63, 0x65, 0x6c, 0x6c, 0x73, 0x12, 0x25,
+	0x0a, 0x07, 0x63, 0x75, 0x72, 0x43, 0x65, 0x6c, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32,
+	0x0b, 0x2e, 0x75, 0x74, 0x74, 0x74, 0x2e, 0x43, 0x6f, 0x6f, 0x72, 0x64, 0x52, 0x07, 0x63, 0x75,
+	0x72, 0x43, 0x65, 0x6c, 0x6c, 0x12, 0x12, 0x0a, 0x04, 0x72, 0x6f, 0x77, 0x73, 0x18, 0x03, 0x20,
+	0x01, 0x28, 0x05, 0x52, 0x04, 0x72, 0x6f, 0x77, 0x73, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f, 0x6c,
+	0x73, 0x18, 0x04, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x63, 0x6f, 0x6c, 0x73, 0x22, 0x52, 0x0a,
+	0x0c, 0x53, 0x74, 0x61, 0x74, 0x65, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x21, 0x0a,
+	0x05, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x75,
+	0x74, 0x74, 0x74, 0x2e, 0x42, 0x6f, 0x61, 0x72, 0x64, 0x52, 0x05, 0x62, 0x6f, 0x61, 0x72, 0x64,
+	0x12, 0x1f, 0x0a, 0x04, 0x74, 0x75, 0x72, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x0b,
+	0x2e, 0x75, 0x74, 0x74, 0x74, 0x2e, 0x4f, 0x77, 0x6e, 0x65, 0x72, 0x52, 0x04, 0x74, 0x75, 0x72,
+	0x6e, 0x22, 0x2f, 0x0a, 0x0d, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x4d, 0x65, 0x73, 0x73, 0x61,
+	0x67, 0x65, 0x12, 0x1e, 0x0a, 0x04, 0x6d, 0x6f, 0x76, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b,
+	0x32, 0x0a, 0x2e, 0x75, 0x74, 0x74, 0x74, 0x2e, 0x4d, 0x6f, 0x76, 0x65, 0x52, 0x04, 0x6d, 0x6f,
+	0x76, 0x65, 0x22, 0x48, 0x0a, 0x0d, 0x52, 0x65, 0x74, 0x75, 0x72, 0x6e, 0x4d, 0x65, 0x73, 0x73,
+	0x61, 0x67, 0x65, 0x12, 0x21, 0x0a, 0x05, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x75, 0x74, 0x74, 0x74, 0x2e, 0x42, 0x6f, 0x61, 0x72, 0x64, 0x52,
+	0x05, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x69, 0x64, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x08, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x69, 0x64, 0x2a, 0x2b, 0x0a, 0x05,
+	0x4f, 0x77, 0x6e, 0x65, 0x72, 0x12, 0x08, 0x0a, 0x04, 0x4e, 0x4f, 0x4e, 0x45, 0x10, 0x00, 0x12,
+	0x0b, 0x0a, 0x07, 0x50, 0x4c, 0x41, 0x59, 0x45, 0x52, 0x31, 0x10, 0x01, 0x12, 0x0b, 0x0a, 0x07,
+	0x50, 0x4c, 0x41, 0x59, 0x45, 0x52, 0x32, 0x10, 0x02, 0x42, 0x0b, 0x5a, 0x09, 0x70, 0x6b, 0x67,
+	0x2f, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -336,24 +573,34 @@ func file_board_proto_rawDescGZIP() []byte {
 }
 
 var file_board_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_board_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_board_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_board_proto_goTypes = []interface{}{
-	(Owner)(0),    // 0: uttt.Owner
-	(*Coord)(nil), // 1: uttt.Coord
-	(*Space)(nil), // 2: uttt.Space
-	(*Cell)(nil),  // 3: uttt.Cell
-	(*Board)(nil), // 4: uttt.Board
+	(Owner)(0),            // 0: uttt.Owner
+	(*Coord)(nil),         // 1: uttt.Coord
+	(*Move)(nil),          // 2: uttt.Move
+	(*Space)(nil),         // 3: uttt.Space
+	(*Cell)(nil),          // 4: uttt.Cell
+	(*Board)(nil),         // 5: uttt.Board
+	(*StateMessage)(nil),  // 6: uttt.StateMessage
+	(*ActionMessage)(nil), // 7: uttt.ActionMessage
+	(*ReturnMessage)(nil), // 8: uttt.ReturnMessage
 }
 var file_board_proto_depIdxs = []int32{
-	0, // 0: uttt.Space.val:type_name -> uttt.Owner
-	2, // 1: uttt.Cell.spaces:type_name -> uttt.Space
-	3, // 2: uttt.Board.cells:type_name -> uttt.Cell
-	1, // 3: uttt.Board.curCell:type_name -> uttt.Coord
-	4, // [4:4] is the sub-list for method output_type
-	4, // [4:4] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	1,  // 0: uttt.Move.large:type_name -> uttt.Coord
+	1,  // 1: uttt.Move.small:type_name -> uttt.Coord
+	0,  // 2: uttt.Space.val:type_name -> uttt.Owner
+	3,  // 3: uttt.Cell.spaces:type_name -> uttt.Space
+	4,  // 4: uttt.Board.cells:type_name -> uttt.Cell
+	1,  // 5: uttt.Board.curCell:type_name -> uttt.Coord
+	5,  // 6: uttt.StateMessage.board:type_name -> uttt.Board
+	0,  // 7: uttt.StateMessage.turn:type_name -> uttt.Owner
+	2,  // 8: uttt.ActionMessage.move:type_name -> uttt.Move
+	5,  // 9: uttt.ReturnMessage.board:type_name -> uttt.Board
+	10, // [10:10] is the sub-list for method output_type
+	10, // [10:10] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_board_proto_init() }
@@ -375,7 +622,7 @@ func file_board_proto_init() {
 			}
 		}
 		file_board_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Space); i {
+			switch v := v.(*Move); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -387,7 +634,7 @@ func file_board_proto_init() {
 			}
 		}
 		file_board_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Cell); i {
+			switch v := v.(*Space); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -399,7 +646,55 @@ func file_board_proto_init() {
 			}
 		}
 		file_board_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Cell); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_board_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Board); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_board_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*StateMessage); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_board_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ActionMessage); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_board_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ReturnMessage); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -417,7 +712,7 @@ func file_board_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_board_proto_rawDesc,
 			NumEnums:      1,
-			NumMessages:   4,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

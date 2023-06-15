@@ -124,6 +124,10 @@ func (c *Coord) Valid() bool {
 	return (c.Col >= 0 && c.Row >= 0) && (c.Col < COLS && c.Row < ROWS)
 }
 
+func (c *Coord) Invalidate() {
+	c.Col, c.Row = -1, -1
+}
+
 // ========== Space Methods ==========
 func NewProtoSpace() *Space {
 	return &Space{Val: Owner_NONE}

@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'Z\tpkg/board',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0b\x62oard.proto\x12\x04uttt\"!\n\x05\x43oord\x12\x0b\n\x03row\x18\x01 \x01(\x05\x12\x0b\n\x03\x63ol\x18\x02 \x01(\x05\"!\n\x05Space\x12\x18\n\x03val\x18\x01 \x01(\x0e\x32\x0b.uttt.Owner\"#\n\x04\x43\x65ll\x12\x1b\n\x06spaces\x18\x01 \x03(\x0b\x32\x0b.uttt.Space\"\\\n\x05\x42oard\x12\x19\n\x05\x63\x65lls\x18\x01 \x03(\x0b\x32\n.uttt.Cell\x12\x1c\n\x07\x63urCell\x18\x02 \x01(\x0b\x32\x0b.uttt.Coord\x12\x0c\n\x04rows\x18\x03 \x01(\x05\x12\x0c\n\x04\x63ols\x18\x04 \x01(\x05*+\n\x05Owner\x12\x08\n\x04NONE\x10\x00\x12\x0b\n\x07PLAYER1\x10\x01\x12\x0b\n\x07PLAYER2\x10\x02\x42\x0bZ\tpkg/boardb\x06proto3'
+  serialized_pb=b'\n\x0b\x62oard.proto\x12\x04uttt\"!\n\x05\x43oord\x12\x0b\n\x03row\x18\x01 \x01(\x05\x12\x0b\n\x03\x63ol\x18\x02 \x01(\x05\">\n\x04Move\x12\x1a\n\x05large\x18\x01 \x01(\x0b\x32\x0b.uttt.Coord\x12\x1a\n\x05small\x18\x02 \x01(\x0b\x32\x0b.uttt.Coord\"!\n\x05Space\x12\x18\n\x03val\x18\x01 \x01(\x0e\x32\x0b.uttt.Owner\"#\n\x04\x43\x65ll\x12\x1b\n\x06spaces\x18\x01 \x03(\x0b\x32\x0b.uttt.Space\"\\\n\x05\x42oard\x12\x19\n\x05\x63\x65lls\x18\x01 \x03(\x0b\x32\n.uttt.Cell\x12\x1c\n\x07\x63urCell\x18\x02 \x01(\x0b\x32\x0b.uttt.Coord\x12\x0c\n\x04rows\x18\x03 \x01(\x05\x12\x0c\n\x04\x63ols\x18\x04 \x01(\x05\"E\n\x0cStateMessage\x12\x1a\n\x05\x62oard\x18\x01 \x01(\x0b\x32\x0b.uttt.Board\x12\x19\n\x04turn\x18\x02 \x01(\x0e\x32\x0b.uttt.Owner\")\n\rActionMessage\x12\x18\n\x04move\x18\x01 \x01(\x0b\x32\n.uttt.Move\":\n\rReturnMessage\x12\x1a\n\x05\x62oard\x18\x01 \x01(\x0b\x32\x0b.uttt.Board\x12\r\n\x05valid\x18\x02 \x01(\x08*+\n\x05Owner\x12\x08\n\x04NONE\x10\x00\x12\x0b\n\x07PLAYER1\x10\x01\x12\x0b\n\x07PLAYER2\x10\x02\x42\x0bZ\tpkg/boardb\x06proto3'
 )
 
 _OWNER = _descriptor.EnumDescriptor(
@@ -48,8 +48,8 @@ _OWNER = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=222,
-  serialized_end=265,
+  serialized_start=460,
+  serialized_end=503,
 )
 _sym_db.RegisterEnumDescriptor(_OWNER)
 
@@ -99,6 +99,45 @@ _COORD = _descriptor.Descriptor(
 )
 
 
+_MOVE = _descriptor.Descriptor(
+  name='Move',
+  full_name='uttt.Move',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='large', full_name='uttt.Move.large', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='small', full_name='uttt.Move.small', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=56,
+  serialized_end=118,
+)
+
+
 _SPACE = _descriptor.Descriptor(
   name='Space',
   full_name='uttt.Space',
@@ -126,8 +165,8 @@ _SPACE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=56,
-  serialized_end=89,
+  serialized_start=120,
+  serialized_end=153,
 )
 
 
@@ -158,8 +197,8 @@ _CELL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=91,
-  serialized_end=126,
+  serialized_start=155,
+  serialized_end=190,
 )
 
 
@@ -211,18 +250,138 @@ _BOARD = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=128,
-  serialized_end=220,
+  serialized_start=192,
+  serialized_end=284,
 )
 
+
+_STATEMESSAGE = _descriptor.Descriptor(
+  name='StateMessage',
+  full_name='uttt.StateMessage',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='board', full_name='uttt.StateMessage.board', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='turn', full_name='uttt.StateMessage.turn', index=1,
+      number=2, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=286,
+  serialized_end=355,
+)
+
+
+_ACTIONMESSAGE = _descriptor.Descriptor(
+  name='ActionMessage',
+  full_name='uttt.ActionMessage',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='move', full_name='uttt.ActionMessage.move', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=357,
+  serialized_end=398,
+)
+
+
+_RETURNMESSAGE = _descriptor.Descriptor(
+  name='ReturnMessage',
+  full_name='uttt.ReturnMessage',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='board', full_name='uttt.ReturnMessage.board', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='valid', full_name='uttt.ReturnMessage.valid', index=1,
+      number=2, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=400,
+  serialized_end=458,
+)
+
+_MOVE.fields_by_name['large'].message_type = _COORD
+_MOVE.fields_by_name['small'].message_type = _COORD
 _SPACE.fields_by_name['val'].enum_type = _OWNER
 _CELL.fields_by_name['spaces'].message_type = _SPACE
 _BOARD.fields_by_name['cells'].message_type = _CELL
 _BOARD.fields_by_name['curCell'].message_type = _COORD
+_STATEMESSAGE.fields_by_name['board'].message_type = _BOARD
+_STATEMESSAGE.fields_by_name['turn'].enum_type = _OWNER
+_ACTIONMESSAGE.fields_by_name['move'].message_type = _MOVE
+_RETURNMESSAGE.fields_by_name['board'].message_type = _BOARD
 DESCRIPTOR.message_types_by_name['Coord'] = _COORD
+DESCRIPTOR.message_types_by_name['Move'] = _MOVE
 DESCRIPTOR.message_types_by_name['Space'] = _SPACE
 DESCRIPTOR.message_types_by_name['Cell'] = _CELL
 DESCRIPTOR.message_types_by_name['Board'] = _BOARD
+DESCRIPTOR.message_types_by_name['StateMessage'] = _STATEMESSAGE
+DESCRIPTOR.message_types_by_name['ActionMessage'] = _ACTIONMESSAGE
+DESCRIPTOR.message_types_by_name['ReturnMessage'] = _RETURNMESSAGE
 DESCRIPTOR.enum_types_by_name['Owner'] = _OWNER
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -232,6 +391,13 @@ Coord = _reflection.GeneratedProtocolMessageType('Coord', (_message.Message,), {
   # @@protoc_insertion_point(class_scope:uttt.Coord)
   })
 _sym_db.RegisterMessage(Coord)
+
+Move = _reflection.GeneratedProtocolMessageType('Move', (_message.Message,), {
+  'DESCRIPTOR' : _MOVE,
+  '__module__' : 'board_pb2'
+  # @@protoc_insertion_point(class_scope:uttt.Move)
+  })
+_sym_db.RegisterMessage(Move)
 
 Space = _reflection.GeneratedProtocolMessageType('Space', (_message.Message,), {
   'DESCRIPTOR' : _SPACE,
@@ -253,6 +419,27 @@ Board = _reflection.GeneratedProtocolMessageType('Board', (_message.Message,), {
   # @@protoc_insertion_point(class_scope:uttt.Board)
   })
 _sym_db.RegisterMessage(Board)
+
+StateMessage = _reflection.GeneratedProtocolMessageType('StateMessage', (_message.Message,), {
+  'DESCRIPTOR' : _STATEMESSAGE,
+  '__module__' : 'board_pb2'
+  # @@protoc_insertion_point(class_scope:uttt.StateMessage)
+  })
+_sym_db.RegisterMessage(StateMessage)
+
+ActionMessage = _reflection.GeneratedProtocolMessageType('ActionMessage', (_message.Message,), {
+  'DESCRIPTOR' : _ACTIONMESSAGE,
+  '__module__' : 'board_pb2'
+  # @@protoc_insertion_point(class_scope:uttt.ActionMessage)
+  })
+_sym_db.RegisterMessage(ActionMessage)
+
+ReturnMessage = _reflection.GeneratedProtocolMessageType('ReturnMessage', (_message.Message,), {
+  'DESCRIPTOR' : _RETURNMESSAGE,
+  '__module__' : 'board_pb2'
+  # @@protoc_insertion_point(class_scope:uttt.ReturnMessage)
+  })
+_sym_db.RegisterMessage(ReturnMessage)
 
 
 DESCRIPTOR._options = None

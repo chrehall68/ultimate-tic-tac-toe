@@ -3,11 +3,22 @@ package uttt;
 
 option go_package = "pkg/board";
 
+// ==================================================
+// ========== Internals Section ==========
+// ==================================================
+// these are just internals that can be accessed
+
 // a single board coordinate;
 // negative values = invalid
 message Coord {
   int32 row = 1;
   int32 col = 2;
+}
+
+// a move has a large (outer) coordinate and a small (inner) coordinate
+message Move {
+  Coord large = 1;
+  Coord small = 2;
 }
 
 // Who the owner of cell/space is
@@ -30,4 +41,29 @@ message Board {
   Coord curCell = 2;
   int32 rows = 3;
   int32 cols = 4;
+}
+
+// ==================================================
+// ========== Message Section ==========
+// ==================================================
+// these are messages that should be sent
+// back and forth between the go program and calling code
+
+// contains info about the current state of the game
+// specificially; it contains the board and the current turn
+message StateMessage {
+  Board board = 1;
+  Owner turn = 2;
+}
+
+// contains info about the action that will be taken
+// Specifically, it contains a move
+message ActionMessage { Move move = 1; }
+
+// this should be sent after an action is taken
+// it returns the changed board as well as whether
+// or not the move was valid
+message ReturnMessage {
+  Board board = 1;
+  bool valid = 2;
 }
