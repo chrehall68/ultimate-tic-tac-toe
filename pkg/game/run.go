@@ -112,7 +112,8 @@ func (a *AIPlayer) getMove() (*board.Move, bool) {
 	}
 	os.Truncate(board.ACTION_FILE, 0)
 
-	return message.Move, true
+	// assume that the ai doesn't quit
+	return message.Move, false
 }
 
 // =======================================================
