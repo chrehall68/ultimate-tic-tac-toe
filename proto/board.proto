@@ -50,10 +50,15 @@ message Board {
 // back and forth between the go program and calling code
 
 // contains info about the current state of the game
-// specificially; it contains the board and the current turn
+// specificially; it contains the board, the owners of the cells,
+// the current turn, the winner (if any), and whether or not
+// the game is done
 message StateMessage {
   Board board = 1;
-  Owner turn = 2;
+  repeated Owner cellowners = 2;
+  Owner turn = 3;
+  Owner winner = 4;
+  bool done = 5;
 }
 
 // contains info about the action that will be taken
@@ -61,9 +66,9 @@ message StateMessage {
 message ActionMessage { Move move = 1; }
 
 // this should be sent after an action is taken
-// it returns the changed board as well as whether
+// it returns another state message as well as whether
 // or not the move was valid
 message ReturnMessage {
-  Board board = 1;
+  StateMessage state = 1;
   bool valid = 2;
 }

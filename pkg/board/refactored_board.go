@@ -172,7 +172,14 @@ func (b *Board) Get(c *Coord) abstractProtoSpace {
 	return b.Cells[idx]
 }
 func (b *Board) Full() bool {
-	return isFull(b)
+	for i := 0; i < CELLS; i++ {
+		// if any of the cells aren't full and have no owner
+		// then the board isn't full
+		if !b.Get(ToCoord(uint32(i))).(*Cell).Full() && b.Get(ToCoord(uint32(i))).Owner() == Owner_NONE {
+			return false
+		}
+	}
+	return true
 }
 func (b *Board) Owner() Owner {
 	return getOwner(b)

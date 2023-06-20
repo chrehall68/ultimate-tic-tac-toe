@@ -67,10 +67,12 @@ func (t *TerminalPlayer) afterMove(_ *board.Board, prevValid bool) {
 
 // =========== AIPlayer ===========
 // represents an AI that communicates via protocol buffers
-type AIPlayer struct{}
+type AIPlayer struct {
+	player board.Owner
+}
 
-func NewAIPlayer() *AIPlayer {
-	return &AIPlayer{}
+func NewAIPlayer(player_num board.Owner) *AIPlayer {
+	return &AIPlayer{player: player_num}
 }
 func write(m protoreflect.ProtoMessage, filename string) {
 	bytes, err := proto.Marshal(m)
@@ -82,14 +84,24 @@ func write(m protoreflect.ProtoMessage, filename string) {
 	if err := os.WriteFile(filename, bytes, 0644); err != nil {
 		log.Fatalln("failed to write bytes")
 	}
-	fmt.Printf("sent message to %v\n", filename)
+	//fmt.Printf("sent message to %v\n", filename)
 }
+func (a *AIPlayer) getStateMessage(b *board.Board, player *board.Owner) *board.StateMessage {
+	owners := make([]board.Owner, 9)
+	for i := 0; i < board.CELLS; i++ {
+		owners[i] = b.Get(board.ToCoord(uint32(i))).Owner()
+	}
+	winner := b.Owner()
+	done := winner != board.Owner_NONE || b.Full()
+	return &board.StateMessage{Board: b, Cellowners: owners, Turn: *player, Winner: winner, Done: done}
+}
+
 func (a *AIPlayer) displayBoard(b *board.Board, player *board.Owner) {
-	state := board.StateMessage{Board: b, Turn: *player}
-	write(&state, board.STATE_FILE)
+	write(a.getStateMessage(b, player), board.STATE_FILE)
 }
 func (a *AIPlayer) afterMove(b *board.Board, prevValid bool) {
-	ret := board.ReturnMessage{Board: b, Valid: prevValid}
+
+	ret := board.ReturnMessage{State: a.getStateMessage(b, &a.player), Valid: prevValid}
 	write(&ret, board.RETURN_FILE)
 }
 func (a *AIPlayer) getMove() (*board.Move, bool) {
@@ -152,10 +164,10 @@ func (runner *Runner) getMoveTerminal() (move *board.Move, quit bool) {
 // =======================================================
 
 func (runner *Runner) run(player1, player2 Player) {
-	fmt.Println("playing Ultimate Tic-Tac-Toe")
+	//fmt.Println("playing Ultimate Tic-Tac-Toe")
 
 	var curPlayer Player
-	for runner.gameboard.Owner() == board.Owner_NONE {
+	for runner.gameboard.Owner() == board.Owner_NONE && !runner.gameboard.Full() {
 		// get the turn number
 		var playerNum board.Owner
 		if runner.turn {
@@ -192,16 +204,16 @@ func (runner *Runner) run(player1, player2 Player) {
 		}
 	}
 
-	fmt.Println(runner.gameboard.TerminalString())
-	fmt.Printf("%v won\n", runner.gameboard.Owner())
+	//fmt.Println(runner.gameboard.TerminalString())
+	//fmt.Printf("%v won\n", runner.gameboard.Owner())
 }
 
 func (runner *Runner) RunPVP() {
 	runner.run(NewTerminalPlayer(runner), NewTerminalPlayer(runner))
 }
 func (runner *Runner) RunPVAI() {
-	runner.run(NewTerminalPlayer(runner), NewAIPlayer())
+	runner.run(NewTerminalPlayer(runner), NewAIPlayer(board.Owner_PLAYER2))
 }
 func (runner *Runner) RunAIs() {
-	runner.run(NewAIPlayer(), NewAIPlayer())
+	runner.run(NewAIPlayer(board.Owner_PLAYER1), NewAIPlayer(board.Owner_PLAYER2))
 }

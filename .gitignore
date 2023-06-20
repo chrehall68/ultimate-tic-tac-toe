@@ -3,3 +3,8 @@
 
 # python cache
 __pycache__/
+
+# cached ai files
+action.b
+statemessage.b
+returnmessage.b
