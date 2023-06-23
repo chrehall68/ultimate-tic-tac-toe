@@ -3,8 +3,9 @@ package game
 import (
 	"fmt"
 	"log"
-	"os"
+	"net"
 	"strconv"
+	"time"
 	"uttt/pkg/board"
 
 	"google.golang.org/protobuf/proto"
@@ -67,24 +68,56 @@ func (t *TerminalPlayer) afterMove(_ *board.Board, prevValid bool) {
 
 // =========== AIPlayer ===========
 // represents an AI that communicates via protocol buffers
+type NetResources struct {
+	stateConn, actionConn, returnConn net.Conn
+}
 type AIPlayer struct {
 	player board.Owner
+	nr     *NetResources
 }
 
-func NewAIPlayer(player_num board.Owner) *AIPlayer {
-	return &AIPlayer{player: player_num}
+func NewNetResources() *NetResources {
+	sListener, err := net.Listen("tcp", "localhost:"+board.STATE_PORT)
+	if err != nil {
+		log.Fatalln("failed to listen on state port")
+	}
+	aListener, err := net.Listen("tcp", "localhost:"+board.ACTION_PORT)
+	if err != nil {
+		log.Fatalln("failed to listen on action port")
+	}
+	rListener, err := net.Listen("tcp", "localhost:"+board.RETURN_PORT)
+	if err != nil {
+		log.Fatalln("failed to listen on return port")
+	}
+
+	sConn, err := sListener.Accept()
+	if err != nil {
+		log.Fatalln("failed to accept state connection")
+	}
+	aConn, err := aListener.Accept()
+	if err != nil {
+		log.Fatalln("failed to accept action connection")
+	}
+	rConn, err := rListener.Accept()
+	if err != nil {
+		log.Fatalln("failed to accept return connection")
+	}
+
+	return &NetResources{stateConn: sConn, actionConn: aConn, returnConn: rConn}
 }
-func write(m protoreflect.ProtoMessage, filename string) {
+func NewAIPlayer(player_num board.Owner, nr *NetResources) *AIPlayer {
+	return &AIPlayer{player: player_num, nr: nr}
+}
+func write(m protoreflect.ProtoMessage, con net.Conn) {
 	bytes, err := proto.Marshal(m)
 	if err != nil {
 		log.Fatalln("Failed to encode State Message")
 	}
 
 	// write the bytes
-	if err := os.WriteFile(filename, bytes, 0644); err != nil {
-		log.Fatalln("failed to write bytes")
+	if _, err := con.Write(bytes); err != nil {
+		log.Fatalln("failed to write bytes to socket")
 	}
-	//fmt.Printf("sent message to %v\n", filename)
 }
 func (a *AIPlayer) getStateMessage(b *board.Board, player *board.Owner) *board.StateMessage {
 	owners := make([]board.Owner, 9)
@@ -97,32 +130,26 @@ func (a *AIPlayer) getStateMessage(b *board.Board, player *board.Owner) *board.S
 }
 
 func (a *AIPlayer) displayBoard(b *board.Board, player *board.Owner) {
-	write(a.getStateMessage(b, player), board.STATE_FILE)
+	write(a.getStateMessage(b, player), a.nr.stateConn)
 }
 func (a *AIPlayer) afterMove(b *board.Board, prevValid bool) {
 
 	ret := board.ReturnMessage{State: a.getStateMessage(b, &a.player), Valid: prevValid}
-	write(&ret, board.RETURN_FILE)
+	write(&ret, a.nr.returnConn)
 }
 func (a *AIPlayer) getMove() (*board.Move, bool) {
-	// wait for content
-	info, err := os.Stat(board.ACTION_FILE)
-	for err != nil || info.Size() == 0 {
-		info, err = os.Stat(board.ACTION_FILE)
-	}
-
 	// open content
-	bytes, err := os.ReadFile(board.ACTION_FILE)
+	bytes := make([]byte, board.MAX_MSG_SIZE)
+	n, err := a.nr.actionConn.Read(bytes)
 	if err != nil {
-		log.Fatalln("failed to read in action")
+		log.Fatalln("failed to read in action with error: ", err.Error())
 	}
 
 	message := &board.ActionMessage{}
-	err = proto.Unmarshal(bytes, message)
+	err = proto.Unmarshal(bytes[:n], message)
 	if err != nil {
 		log.Fatalln("failed to decode action")
 	}
-	os.Truncate(board.ACTION_FILE, 0)
 
 	// assume that the ai doesn't quit
 	return message.Move, false
@@ -212,8 +239,20 @@ func (runner *Runner) RunPVP() {
 	runner.run(NewTerminalPlayer(runner), NewTerminalPlayer(runner))
 }
 func (runner *Runner) RunPVAI() {
-	runner.run(NewTerminalPlayer(runner), NewAIPlayer(board.Owner_PLAYER2))
+	nr := NewNetResources()
+	runner.run(NewTerminalPlayer(runner), NewAIPlayer(board.Owner_PLAYER2, nr))
+
+	time.Sleep(1 * time.Second)
+	nr.actionConn.Close()
+	nr.stateConn.Close()
+	nr.returnConn.Close()
 }
 func (runner *Runner) RunAIs() {
-	runner.run(NewAIPlayer(board.Owner_PLAYER1), NewAIPlayer(board.Owner_PLAYER2))
+	nr := NewNetResources()
+	runner.run(NewAIPlayer(board.Owner_PLAYER1, nr), NewAIPlayer(board.Owner_PLAYER2, nr))
+
+	time.Sleep(1 * time.Second)
+	nr.actionConn.Close()
+	nr.stateConn.Close()
+	nr.returnConn.Close()
 }

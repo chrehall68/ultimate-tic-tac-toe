@@ -9,7 +9,8 @@ const (
 
 // protobuf related constants
 const (
-	STATE_FILE  = "statemessage.b"
-	ACTION_FILE = "action.b"
-	RETURN_FILE = "returnmessage.b"
+	STATE_PORT   = "8000"
+	ACTION_PORT  = "8001"
+	RETURN_PORT  = "8002"
+	MAX_MSG_SIZE = 512
 )
