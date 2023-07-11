@@ -247,6 +247,15 @@ func (runner *Runner) RunPVAI() {
 	nr.stateConn.Close()
 	nr.returnConn.Close()
 }
+func (runner *Runner) RunAIVP() {
+	nr := NewNetResources()
+	runner.run(NewAIPlayer(board.Owner_PLAYER2, nr), NewTerminalPlayer(runner))
+
+	time.Sleep(1 * time.Second)
+	nr.actionConn.Close()
+	nr.stateConn.Close()
+	nr.returnConn.Close()
+}
 func (runner *Runner) RunAIs() {
 	nr := NewNetResources()
 	runner.run(NewAIPlayer(board.Owner_PLAYER1, nr), NewAIPlayer(board.Owner_PLAYER2, nr))

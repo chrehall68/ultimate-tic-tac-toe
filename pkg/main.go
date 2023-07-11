@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	msg := "Please provide either `pvp` for Player vs Player, `pvai` for Player vs AI, or `aivai` for AI vs AI"
+	msg := "Please provide either `pvp` for Player vs Player, `pvai` for Player vs AI, `aivp` for AI vs Player, or `aivai` for AI vs AI"
 	if len(os.Args) > 1 {
 		runner := game.NewRunner()
 
@@ -17,6 +17,8 @@ func main() {
 			runner.RunPVP()
 		case "pvai":
 			runner.RunPVAI()
+		case "aivp":
+			runner.RunAIVP()
 		case "aivai":
 			runner.RunAIs()
 		default:
