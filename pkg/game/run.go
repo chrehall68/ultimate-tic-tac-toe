@@ -231,8 +231,14 @@ func (runner *Runner) run(player1, player2 Player) {
 		}
 	}
 
-	//fmt.Println(runner.gameboard.TerminalString())
-	//fmt.Printf("%v won\n", runner.gameboard.Owner())
+	// check if either player was a terminal player
+	// if so, print out final message
+	_, valid1 := player1.(*TerminalPlayer)
+	_, valid2 := player2.(*TerminalPlayer)
+	if valid1 || valid2 {
+		fmt.Println(runner.gameboard.TerminalString())
+		fmt.Printf("%v won\n", runner.gameboard.Owner())
+	}
 }
 
 func (runner *Runner) RunPVP() {
