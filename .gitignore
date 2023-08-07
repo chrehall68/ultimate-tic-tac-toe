@@ -8,3 +8,5 @@ __pycache__/
 models/
 logs/
 *_temp.keras
+pretrain*
+saved.keras

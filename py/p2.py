@@ -3,7 +3,7 @@ import tensorflow as tf
 from env import UltimateTicTacToeEnv
 import time
 
-MODEL_NAME = "ppo15.keras"
+MODEL_NAME = "attenppo1.keras"
 
 if __name__ == "__main__":
     env = UltimateTicTacToeEnv()
@@ -13,7 +13,7 @@ if __name__ == "__main__":
         print("waiting for player to move")
         logits, _ = model(tf.expand_dims(obs, axis=0))
         print(logits)
-        action = tf.argmax(logits, axis=1)[0]
+        action = tf.random.categorical(logits, num_samples=1)[0, 0]
         print(action.numpy())
         obs, reward, done, valid = env.step(action.numpy())
         if done:
