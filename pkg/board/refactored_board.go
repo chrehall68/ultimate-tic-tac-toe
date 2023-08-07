@@ -1,6 +1,8 @@
 package board
 
-import "uttt/pkg/color"
+import (
+	"uttt/pkg/color"
+)
 
 // ========== abstractions ==========
 
@@ -171,6 +173,12 @@ func (b *Board) Get(c *Coord) abstractProtoSpace {
 	idx, _ := c.Index()
 	return b.Cells[idx]
 }
+
+// get the space at b.Cells[outer].Spaces[inner]
+func (b *Board) get(outer, inner int) *Space {
+	return b.Cells[outer].Spaces[inner]
+}
+
 func (b *Board) Full() bool {
 	for i := 0; i < CELLS; i++ {
 		// if any of the cells aren't full and have no owner
@@ -184,6 +192,34 @@ func (b *Board) Full() bool {
 func (b *Board) Owner() Owner {
 	return getOwner(b)
 }
+func (b *Board) Moves() []*Move {
+	moves := make([]*Move, 0)
+
+	if b.CurCell.Valid() {
+		// if there's a current cell,
+		// only get moves from that current cell
+		for inner := 0; inner < CELLS; inner++ {
+			if b.Get(b.CurCell).(*Cell).Get(ToCoord(uint32(inner))).Owner() == Owner_NONE {
+				moves = append(moves, &Move{Large: b.CurCell, Small: ToCoord(uint32(inner))})
+			}
+		}
+	} else {
+		// if there isn't a current cell, get all possible moves
+		// from the board
+		for outer := 0; outer < CELLS; outer++ {
+			if b.Get(ToCoord(uint32(outer))).Owner() != Owner_NONE {
+				continue
+			}
+			for inner := 0; inner < CELLS; inner++ {
+				if b.get(outer, inner).Owner() == Owner_NONE {
+					moves = append(moves, &Move{Large: ToCoord(uint32(outer)), Small: ToCoord(uint32(inner))})
+				}
+			}
+		}
+	}
+
+	return moves
+}
 
 // Returns a string printable to color-supporting terminals
 func (b *Board) TerminalString() string {
@@ -195,7 +231,7 @@ func (b *Board) TerminalString() string {
 					ret += color.Red
 				}
 				for innerCol := 0; innerCol < COLS; innerCol++ {
-					switch b.Cells[row*ROWS+col].Spaces[innerRow*ROWS+innerCol].Owner() {
+					switch b.get(row*ROWS+col, innerRow*ROWS+innerCol).Owner() {
 					case 1:
 						ret += "X "
 					case 2:

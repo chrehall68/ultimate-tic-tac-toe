@@ -126,14 +126,13 @@ func (a *AIPlayer) getStateMessage(b *board.Board, player *board.Owner) *board.S
 	}
 	winner := b.Owner()
 	done := winner != board.Owner_NONE || b.Full()
-	return &board.StateMessage{Board: b, Cellowners: owners, Turn: *player, Winner: winner, Done: done}
+	return &board.StateMessage{Board: b, Cellowners: owners, Turn: *player, Winner: winner, Done: done, Validmoves: b.Moves()}
 }
 
 func (a *AIPlayer) displayBoard(b *board.Board, player *board.Owner) {
 	write(a.getStateMessage(b, player), a.nr.stateConn)
 }
 func (a *AIPlayer) afterMove(b *board.Board, prevValid bool) {
-
 	ret := board.ReturnMessage{State: a.getStateMessage(b, &a.player), Valid: prevValid}
 	write(&ret, a.nr.returnConn)
 }

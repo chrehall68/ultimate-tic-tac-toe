@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0b\x62oard.proto\x12\x04uttt\"!\n\x05\x43oord\x12\x0b\n\x03row\x18\x01 \x01(\x05\x12\x0b\n\x03\x63ol\x18\x02 \x01(\x05\">\n\x04Move\x12\x1a\n\x05large\x18\x01 \x01(\x0b\x32\x0b.uttt.Coord\x12\x1a\n\x05small\x18\x02 \x01(\x0b\x32\x0b.uttt.Coord\"!\n\x05Space\x12\x18\n\x03val\x18\x01 \x01(\x0e\x32\x0b.uttt.Owner\"#\n\x04\x43\x65ll\x12\x1b\n\x06spaces\x18\x01 \x03(\x0b\x32\x0b.uttt.Space\"\\\n\x05\x42oard\x12\x19\n\x05\x63\x65lls\x18\x01 \x03(\x0b\x32\n.uttt.Cell\x12\x1c\n\x07\x63urCell\x18\x02 \x01(\x0b\x32\x0b.uttt.Coord\x12\x0c\n\x04rows\x18\x03 \x01(\x05\x12\x0c\n\x04\x63ols\x18\x04 \x01(\x05\"\x91\x01\n\x0cStateMessage\x12\x1a\n\x05\x62oard\x18\x01 \x01(\x0b\x32\x0b.uttt.Board\x12\x1f\n\ncellowners\x18\x02 \x03(\x0e\x32\x0b.uttt.Owner\x12\x19\n\x04turn\x18\x03 \x01(\x0e\x32\x0b.uttt.Owner\x12\x1b\n\x06winner\x18\x04 \x01(\x0e\x32\x0b.uttt.Owner\x12\x0c\n\x04\x64one\x18\x05 \x01(\x08\")\n\rActionMessage\x12\x18\n\x04move\x18\x01 \x01(\x0b\x32\n.uttt.Move\"A\n\rReturnMessage\x12!\n\x05state\x18\x01 \x01(\x0b\x32\x12.uttt.StateMessage\x12\r\n\x05valid\x18\x02 \x01(\x08*+\n\x05Owner\x12\x08\n\x04NONE\x10\x00\x12\x0b\n\x07PLAYER1\x10\x01\x12\x0b\n\x07PLAYER2\x10\x02\x42\x0bZ\tpkg/boardb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0b\x62oard.proto\x12\x04uttt\"!\n\x05\x43oord\x12\x0b\n\x03row\x18\x01 \x01(\x05\x12\x0b\n\x03\x63ol\x18\x02 \x01(\x05\">\n\x04Move\x12\x1a\n\x05large\x18\x01 \x01(\x0b\x32\x0b.uttt.Coord\x12\x1a\n\x05small\x18\x02 \x01(\x0b\x32\x0b.uttt.Coord\"!\n\x05Space\x12\x18\n\x03val\x18\x01 \x01(\x0e\x32\x0b.uttt.Owner\"#\n\x04\x43\x65ll\x12\x1b\n\x06spaces\x18\x01 \x03(\x0b\x32\x0b.uttt.Space\"\\\n\x05\x42oard\x12\x19\n\x05\x63\x65lls\x18\x01 \x03(\x0b\x32\n.uttt.Cell\x12\x1c\n\x07\x63urCell\x18\x02 \x01(\x0b\x32\x0b.uttt.Coord\x12\x0c\n\x04rows\x18\x03 \x01(\x05\x12\x0c\n\x04\x63ols\x18\x04 \x01(\x05\"\xb1\x01\n\x0cStateMessage\x12\x1a\n\x05\x62oard\x18\x01 \x01(\x0b\x32\x0b.uttt.Board\x12\x1f\n\ncellowners\x18\x02 \x03(\x0e\x32\x0b.uttt.Owner\x12\x19\n\x04turn\x18\x03 \x01(\x0e\x32\x0b.uttt.Owner\x12\x1b\n\x06winner\x18\x04 \x01(\x0e\x32\x0b.uttt.Owner\x12\x0c\n\x04\x64one\x18\x05 \x01(\x08\x12\x1e\n\nvalidmoves\x18\x06 \x03(\x0b\x32\n.uttt.Move\")\n\rActionMessage\x12\x18\n\x04move\x18\x01 \x01(\x0b\x32\n.uttt.Move\"A\n\rReturnMessage\x12!\n\x05state\x18\x01 \x01(\x0b\x32\x12.uttt.StateMessage\x12\r\n\x05valid\x18\x02 \x01(\x08*+\n\x05Owner\x12\x08\n\x04NONE\x10\x00\x12\x0b\n\x07PLAYER1\x10\x01\x12\x0b\n\x07PLAYER2\x10\x02\x42\x0bZ\tpkg/boardb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -22,8 +22,8 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'Z\tpkg/board'
-  _globals['_OWNER']._serialized_start=544
-  _globals['_OWNER']._serialized_end=587
+  _globals['_OWNER']._serialized_start=576
+  _globals['_OWNER']._serialized_end=619
   _globals['_COORD']._serialized_start=21
   _globals['_COORD']._serialized_end=54
   _globals['_MOVE']._serialized_start=56
@@ -35,9 +35,9 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['_BOARD']._serialized_start=192
   _globals['_BOARD']._serialized_end=284
   _globals['_STATEMESSAGE']._serialized_start=287
-  _globals['_STATEMESSAGE']._serialized_end=432
-  _globals['_ACTIONMESSAGE']._serialized_start=434
-  _globals['_ACTIONMESSAGE']._serialized_end=475
-  _globals['_RETURNMESSAGE']._serialized_start=477
-  _globals['_RETURNMESSAGE']._serialized_end=542
+  _globals['_STATEMESSAGE']._serialized_end=464
+  _globals['_ACTIONMESSAGE']._serialized_start=466
+  _globals['_ACTIONMESSAGE']._serialized_end=507
+  _globals['_RETURNMESSAGE']._serialized_start=509
+  _globals['_RETURNMESSAGE']._serialized_end=574
 # @@protoc_insertion_point(module_scope)

@@ -59,6 +59,7 @@ message StateMessage {
   Owner turn = 3;
   Owner winner = 4;
   bool done = 5;
+  repeated Move validmoves = 6;
 }
 
 // contains info about the action that will be taken
