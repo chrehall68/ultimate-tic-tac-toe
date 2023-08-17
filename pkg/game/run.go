@@ -150,9 +150,8 @@ func (a *AIPlayer) getMove() (*board.Move, bool) {
 		log.Fatalln("failed to decode action")
 	}
 
-	// assume that the an invalid coordinate means that the
-	// ai / computer quit
-	return message.Move, !message.Move.Large.Valid() || !message.Move.Small.Valid()
+	// assume that the ai doesn't quit
+	return message.Move, false
 }
 
 // =======================================================
@@ -264,15 +263,10 @@ func (runner *Runner) RunAIVP() {
 }
 func (runner *Runner) RunAIs() {
 	nr := NewNetResources()
+	runner.run(NewAIPlayer(board.Owner_PLAYER1, nr), NewAIPlayer(board.Owner_PLAYER2, nr))
 
-	for {
-		runner.run(NewAIPlayer(board.Owner_PLAYER1, nr), NewAIPlayer(board.Owner_PLAYER2, nr))
-
-		// reset vars
-		runner.gameboard = board.NewProtoBoard()
-		runner.turn = true
-	}
-	// nr.actionConn.Close()
-	// nr.stateConn.Close()
-	// nr.returnConn.Close()
+	time.Sleep(1 * time.Second)
+	nr.actionConn.Close()
+	nr.stateConn.Close()
+	nr.returnConn.Close()
 }
